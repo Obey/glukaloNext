@@ -304,7 +304,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
       );
       mesh.position.y = height / 2;
 
-      //   mesh.parent = BABYLON.Mesh.CreateSphere("sphere", 6, 0.19 - d, scene);
+      //   mesh.parent = BABYLON.Mesh.CreateSphere("sphere", 6, 0.19 - d, $scope.scene);
 
       let cubemesh = BABYLON.MeshBuilder.CreateBox(
         "box",
@@ -387,7 +387,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
   };
 
   var a = 0;
-  scene.beforeRender = () => {
+  $scope.scene.beforeRender = () => {
     a += 0.01;
     pbr.subSurface.tintColor.g = Math.cos(a) * 0.5 + 0.5;
     pbr.subSurface.tintColor.b = pbr.subSurface.tintColor.g;

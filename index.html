@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>WORMME</title>
-<meta property="og:image" content="browser_WSRnNhytry.png" />
-<meta property="og:title" content="Червеобразная форма" />
+    <title>WORMMEAGAIN</title>
+<meta property="og:image" content="" />
+<meta property="og:title" content="Ещё одна червеобразная форма" />
 <meta property="og:description" content="Не, ну а чо" />
 	
 
@@ -15,12 +15,7 @@
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-
      <link rel="stylesheet" href="css/w3.css">
-
-
-
      <link rel="stylesheet" href="https://shop.zabor-ss.ru/new/depend/jquery-ui-1.12.1.custom/jquery-ui.min.css">
      <script src="https://shop.zabor-ss.ru/new/depend/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
      <script src="https://shop.zabor-ss.ru/new/depend/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
@@ -139,13 +134,17 @@
   </head>
 
     <body ng-app="myApp" ng-controller="myCtrl">
+	    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&autoLogAppEvents=1&version=v10.0&appId=186162668099890" nonce="UodN9yGR"></script>	    
+	    
+	
   <div class="container-fluid rounded bg-white text-center">
 
     <canvas class="mx-auto" id="renderCanvas"></canvas>
     <hr />
     {{alpha}}
 <input type="range" ng-init="alpha = 0.5" ng-model="alpha"  min="-2" max="2" step="0.001"> 
-   </div>  <script>
+   <div style="bottom: 5%; z-index: 5000;" class="fb-like" data-colorscheme="dark" data-href="https://obey.github.io/glukaloNext/" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>
+</div>  <script>
  var app = angular.module('myApp', []);
 
 app.controller('myCtrl', function($scope) {

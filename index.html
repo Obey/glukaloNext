@@ -4,33 +4,17 @@
 <head>
     <title>WORMME</title>
 <meta property="og:image" content="browser_WSRnNhytry.png" />
-<meta property="og:title" content="Другая, менее червеобразная форма" />
+<meta property="og:title" content="Червеобразная форма" />
 <meta property="og:description" content="Не, ну а чо" />
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+	
 
-   ym(73283371, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true,
-        ecommerce:"dataLayer"
-   });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/73283371" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter --> 
-	
-	
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--<script type="text/javascript" src="js/mdb.min.js"></script>-->
      <link rel="stylesheet" href="css/mdb.min.css">
-  <!--   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
- <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> -->
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 
      <link rel="stylesheet" href="css/w3.css">
@@ -91,7 +75,7 @@
             color: white;
         }
 
- 
+
 
 
 
@@ -139,7 +123,7 @@
 
         #renderCanvas {
             width: 100%;
-            height: 100%;
+            height: 90vh;
             touch-action: none;
         }
         #upr {
@@ -155,140 +139,85 @@
   </head>
 
     <body ng-app="myApp" ng-controller="myCtrl">
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&autoLogAppEvents=1&version=v10.0&appId=186162668099890" nonce="UodN9yGR"></script>	    
-	    
-	    
-<canvas id="renderCanvas"></canvas>
-<div  class="m-2"> </div>
-<div style="bottom: 5%; z-index: 5000;" class="fb-like" data-colorscheme="dark" data-href="https://obey.github.io/glukaloNext/" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>
+  <div class="container-fluid rounded bg-white text-center">
 
-	    
-<div  id="upr" class="container d-flex p-1 text-center">
-<div   class="mx-auto d-flex p-1 center">	
-	
-<input class="form-range" type="range" min="0" max="1" step ="0.05" ng-model="Metal_material.roughness">
-<input class="form-range" ng-change="Wire();" type="range" min="1" step ="1" ng-model="length">	
-</div>
-	
+    <canvas class="mx-auto" id="renderCanvas"></canvas>
+    <hr />
+    {{alpha}}
+<input type="range" ng-init="alpha = 0.5" ng-model="alpha"  min="-2" max="2" step="0.001"> 
+   </div>  <script>
+ var app = angular.module('myApp', []);
 
+app.controller('myCtrl', function($scope) {
+   
+        var canvas = document.getElementById("renderCanvas");
 
-	
-	
-<div ng-init="sc = true" class="form-check form-switch">
-  <input ng-change="WB(sc);" ng-model="sc" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-  <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-</div>	
-<div class="form-check form-switch">
-  <input ng-model="Metalframe" class="form-check-input" type="checkbox" id="flexSw2">
-  <label class="form-check-label" for="flexSw2"></label>
-</div>	
-	
-</div>
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        // script importation
+        var url = "https://cdn.rawgit.com/BabylonJS/Extensions/master/Polyhedron/polyhedra.js";
+        var s = document.createElement("script");
+        s.src = url;
+        document.head.appendChild(s);
 
-<!--
-<div ng-show="matColor != '#000000FF'"  ng-click="matColor = '#000000FF'" class="btn btn-sm btn-info">{{matColor}}</div>
-<div ng-show="matColor != '#FFFFFFFF'"  ng-click="matColor = '#FFFFFFFF'" class="btn btn-sm btn-info">{{matColor}}</div>
-<input  ng-change="Wire();" type="range" step ="0.00001" ng-model="kk">	
-<div ng-show="sceneColor != '#FFFFFFFF'" ng-click="sceneColor = '#FFFFFFFF'" class="btn btn-sm btn-secondary">{{sceneColor}}</div>
-<div ng-show="sceneColor != '#000000FF'" ng-click="sceneColor = '#000000FF'" class="btn btn-sm btn-secondary">{{sceneColor}}</div>
-<input style="bottom: 5%; z-index: 5000;" ng-change=" Wire();" type="number" step ="1" ng-model="wire">
-<input ng-change="" type="number" step ="1" ng-model="kgk">
-<div ng-click="Metalframe = !Metalframe" class="btn btn-sm btn-white">{{Metalframe}}</div>
-	
-<div ng-click="meshmat = Metal_material" class="btn btn-xs btn-default">meshmat = Metal_material</div>
-<div ng-click="meshmat = BetonTexture" class="btn btn-xs btn-default">meshmat = BetonTexture</div>
-<div ng-click="texturl = '/images/sandtexture2.jpg'" class="btn btn-xs btn-default">sandtexture2</div>
-<input type="text"  ng-model="texturl">
+        var createScene = function () {
+         var scene = new BABYLON.Scene(engine);
+         $scope.windowWidth = $( window ).width();
+  $scope.windowHeight = $( window ).height();
 
-<input type="number" step ="0.1" ng-model="wwww">
-<input type="number" step ="0.1" ng-model="www">
-<input type="number" step ="0.01" ng-model="ww">
-<input type="number" step ="0.001" ng-model="kplus">
-
-<input class="hidden" type="number" step ="0.1" ng-model="radius">
-
-<input class="hidden" type="number" step ="0.1" ng-model="meshmat.diffuseTexture.uScale">
-<input class="hidden" type="number" step ="0.1" ng-model="meshmat.diffuseTexture.vScale">
--->
-
-
-    <script >
-    var app = angular.module('myApp', []);
-
-    app.controller('myCtrl', function($scope) {
-    $scope.Metalframe = true;
-  //  $scope.texturl = "https://shop.zabor-ss.ru/images/sandtexture.jpg";
-      var canvas = document.getElementById("renderCanvas");
-
-      var engine = null;
-     $scope.scene = null;
-      var sceneToRender = null;
-      var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
-      var createScene = function() {
- $scope.scene = new BABYLON.Scene(engine);
-
-
-  $scope.sceneColor = '#000000FF';
-  $scope.scene.clearColor = new BABYLON.Color4.FromHexString($scope.sceneColor);
-  var camera = new BABYLON.ArcRotateCamera("camera1",  0, 0, 0, new BABYLON.Vector3(0, 0, -0), $scope.scene);
-  camera.setPosition(new BABYLON.Vector3(0, 0, -60));
-  // camera.attachControl(canvas, true);
-  var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 0.5, 0), $scope.scene);
-  light.intensity = 1;
-  var pl = new BABYLON.PointLight("pl", new BABYLON.Vector3(0, 0, 0), $scope.scene);
-  pl.diffuse = new BABYLON.Color3(1, 1, 1);
-  pl.specular = new BABYLON.Color3(0.05, 0.91, 0.65);
-  pl.intensity = 1.15;
-
-  var mat = new BABYLON.StandardMaterial("mat1", $scope.scene);
-  mat.alpha = 1;
-
-  var EnvironmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("environment.dds", $scope.scene);
-  // Металл
-    $scope.Metal_material = new BABYLON.PBRMetallicRoughnessMaterial("pbr", $scope.scene);
-    $scope.Metal_material.metallic = 1;
-    $scope.Metal_material.roughness = .1;
-    $scope.Metal_material.environmentTexture = EnvironmentTexture;
-    $scope.Metal_material.baseColor = new BABYLON.Color4.FromHexString('#FFFFFFFF');
-    $scope.Metal_material.backFaceCulling = true;
-    $scope.Metal_material.wireframe = $scope.Metalframe;
-/*
-  // Металл КОНЕЦ
-  $scope.BetonTexture = new BABYLON.Texture("/images/betontexture2.jpg", $scope.scene);
-  $scope.Beton = new BABYLON.StandardMaterial('Beton', $scope.scene);
-  $scope.Beton.diffuseColor = new BABYLON.Color4.FromHexString('#DCDCDCFF');
-  $scope.Beton.diffuseTexture = $scope.BetonTexture;
-  $scope.Beton.bumpTexture = $scope.BetonTexture;
-  //$scope.Beton.bumpTexture.opacity = 0.1;
-  $scope.Beton.bumpTexture.level = 1;
-  $scope.Beton.bumpTexture.uScale = $scope.Beton.diffuseTexture.uScale = 12;
-  $scope.Beton.bumpTexture.vScale = $scope.Beton.diffuseTexture.vScale = 13;
-   $scope.Beton.backFaceCulling = true;
-    $scope.Beton.wireframe = $scope.Metalframe;
-*/
-
-  $scope.matColor = '#FFFFFFFF';
-  mat.diffuseColor = new BABYLON.Color4.FromHexString($scope.matColor);
-  mat.backFaceCulling = false;
-  mat.wireframe = $scope.Metalframe;
-
-$scope.WB = function(sc) {	      
-if (sc) { $scope.sceneColor = '#000000FF'; $scope.matColor = '#FFFFFFFF'; }
-else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }	
-}
-
- /*  scene.EnvironmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData(
+     scene.clearColor = new BABYLON.Color4.FromHexString('#FFFFFFFF');
+    //    scene.clearColor = new BABYLON.Color4.FromHexString('#000000FF');
+       scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData(
     "https://playground.babylonjs.com/textures/environment.dds",
     scene
   );
- */
-  var pbr = new BABYLON.PBRMaterial("pbr", $scope.scene);
-  pbr.subSurface.isRefractionEnabled = true;
-  pbr.subSurface.indexOfRefraction = 1.5;
+            var camera = new BABYLON.ArcRotateCamera("camera1",  0, 0, 0, new BABYLON.Vector3(0, 0, -0), scene);
+              
+              camera.attachControl(canvas, true);
+              var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-1, 0.5, 0), scene);
+              light.intensity = 0.9;
+              var pl = new BABYLON.PointLight("pl", new BABYLON.Vector3(0,.5, 2), scene);
+              pl.diffuse = new BABYLON.Color3(1, 1, 1);
+              //pl.specular = new BABYLON.Color3(1, 0, 0);
+              pl.intensity = 0.0;
+              camera.fov = 0.89;
+
+
+              camera.setPosition(new BABYLON.Vector3(0, 0, -4));
+              
+              if ($scope.windowHeight > $scope.windowWidth) {
+                camera.setPosition(new BABYLON.Vector3(0, 0, -4));
+                camera.alpha = Math.PI;
+                 }
+
+                 
+                 camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius;
+
+
+              var mat2 = new BABYLON.StandardMaterial("mat1", scene);        
+              mat2.diffuseColor = new BABYLON.Color3(1, 1, 1);
+
+  var mat = new BABYLON.StandardMaterial("mat1", scene);
+ 
+// mat.diffuseColor = new BABYLON.Color3(0.94, 0.61, 0.08);
+ mat.backFaceCulling = false;
+//mat.wireframe = true;
+  mat.diffuseTexture = new BABYLON.Texture("/images/dikiykamen3.jpg", scene);
+//  mat.bumpTexture = new BABYLON.Texture("/images/dikiykamen3.jpg", scene);
+       mat.diffuseTexture.uOffset = $scope.alpha/2;
+       mat.diffuseTexture.vOffset = 1.0;
+ 
+       mat.alpha =  $scope.alpha;
  
 
-
+      
+  var pbr = new BABYLON.PBRMaterial("pbr", scene);
+  pbr.subSurface.isRefractionEnabled = true;
+  pbr.subSurface.indexOfRefraction = 1.5;
+  pbr.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("/textures/environment.dds", scene);
+    
   var oct = function (M = 57) {
     let skeletons = [];
     let parentAnchor = null;
@@ -296,29 +225,29 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
     for (let i = 2; i < M; i++) {
       let d = i / M / 10;
       let height = (1 / M) * 7;
- 
+
       let mesh = BABYLON.MeshBuilder.CreateCylinder(
         "cylinder",
         { height: height, diameter: (0.1 - d) * 0.5, tessellation: 6 },
-        $scope.scene
+        scene
       );
       mesh.position.y = height / 2;
 
-      //   mesh.parent = BABYLON.Mesh.CreateSphere("sphere", 6, 0.19 - d, $scope.scene);
+      //   mesh.parent = BABYLON.Mesh.CreateSphere("sphere", 6, 0.19 - d, scene);
 
       let cubemesh = BABYLON.MeshBuilder.CreateBox(
         "box",
         { size: 0.15 - d },
-        $scope.scene
+        scene
       );
 
       let cubemeshL = cubemesh.clone("cubemeshL");
-      cubemeshL.scaling = new BABYLON.Vector3(0.7, 0.7, 0.7);
+      cubemeshL.scaling = new BABYLON.Vector3(0.5, 0.7, 0.7);
       cubemeshL.rotation.x = Math.PI / 4;
       cubemeshL.position.x -= (0.17 - d) * 1;
 
       let cubemeshR = cubemesh.clone("cubemeshL");
-      cubemeshR.scaling = new BABYLON.Vector3(0.7, 0.7, 0.7);
+      cubemeshR.scaling = new BABYLON.Vector3(0.5, 0.7, 0.7);
       cubemeshR.rotation.x = Math.PI / 4;
       cubemeshR.position.x += (0.17 - d) * 1;
 
@@ -335,7 +264,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
       let sidemesh = BABYLON.MeshBuilder.CreateCylinder(
         "cylinder",
         { height: 0.23 - d, diameter: (0.1 - d) * 0.5, tessellation: 32 },
-        $scope.scene
+        scene
       ); /* */
       sidemesh.rotation.x = Math.PI / 2;
       sidemesh.rotation.z = Math.PI / 2;
@@ -360,100 +289,83 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
   skeletons = oct(42);
 
   let t = 0;
-  $scope.scene.registerBeforeRender(function () {
+  scene.registerBeforeRender(function () {
     for (let i in skeletons) {
       if (!skeletons[i].parent) continue;
 
       let sint = Math.cos(t * i);
-      let poX = Math.sin(t) * 0.04 * i;
-      let poZ = ((Math.sin(t) * sint) / 42) * poX;
-      skeletons[i].parent.rotation.x = poX;
-      skeletons[i].parent.rotation.z = poX;
- 
+      let poX = Math.sin(t)  * 0.03 * i   * $scope.alpha;
+      let poZ = ((Math.sin(t) * sint) / 45) * poX;
+      skeletons[i].parent.rotation.x= poX;
+      skeletons[i].parent.rotation.z = poX * sint;
+      skeletons[i].parent.rotation.y = poZ;
     }
     t += 0.005;
+
+    camera.alpha += 0.001;
   });
 
   // The main render loop.
   const renderLoop = () => {
-   
+    //  light.intensity = mutable lightx;
 
-    pbr.subSurface.tintColor = new BABYLON.Color3.FromHexString("#FFFFFF:);
-    pbr.metallic =1;
+    // shape.isVisible = mutable chk;
+    // shape.scaling.y = mutable scaling_y;
+
+    pbr.subSurface.tintColor = new BABYLON.Color3.FromHexString("#FFFFFF");
+    pbr.metallic = 1;
     pbr.roughness = 0;
 
     //  shape.rotation.x -= 0.013;
-   $scope.scene.render();
+    scene.render();
   };
 
   var a = 0;
-  $scope.scene.beforeRender = () => {
+  scene.beforeRender = () => {
     a += 0.01;
     pbr.subSurface.tintColor.g = Math.cos(a) * 0.5 + 0.5;
     pbr.subSurface.tintColor.b = pbr.subSurface.tintColor.g;
   };
-	      
-	      
-	      
-	      
 
-  return $scope.scene;
-};
-
-
-engine = createDefaultEngine();
-if (!engine) throw 'engine should not be null.';
-scene = createScene();
-sceneToRender = $scope.scene;
-
-engine.runRenderLoop(function () {
-    if (sceneToRender) {
-        sceneToRender.render();
-    }
-});
-
-
-var objectUrl;
-function doDownload(filename, scene) {
-    if(objectUrl) {
-        window.URL.revokeObjectURL(objectUrl);
-    }
-
-    var serializedScene = BABYLON.SceneSerializer.Serialize($scope.scene);
-
-    var strMesh = JSON.stringify(serializedScene);
-
-    if (filename.toLowerCase().lastIndexOf(".babylon") !== filename.length - 8 || filename.length < 9){
-        filename += ".babylon";
-    }
-
-  var blob = new Blob ( [ strMesh ], { type : "octet/stream" } );
-
-    // turn blob into an object URL; saved as a member, so can be cleaned out later
-    objectUrl = (window.webkitURL || window.URL).createObjectURL(blob);
-
-    var link = window.document.createElement('a');
-    link.href = objectUrl;
-    link.download = filename;
-    var click = document.createEvent("MouseEvents");
-    click.initEvent("click", true, false);
-    link.dispatchEvent(click);
-}
-
-
-// Resize
-window.addEventListener("resize", function () {
-    engine.resize();
-});
+   
 
 
 
+         return scene;
+        };
+                var engine;
+                var scene;
+                initFunction = async function() {
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
 
+                    engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene();};
+        initFunction().then(() => {sceneToRender = scene
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
 
-
-
-    });
-
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        }); 
+      });
     </script>
 </body>
+<?$js_debug = $_GET['jsd'];?>
+
+<script type="text/javascript" src="our_js3/babylon_part.js<?if(!$js_debug) echo ('?' . time());?>"></script>
+
+
 </html>

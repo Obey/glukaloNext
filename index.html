@@ -360,7 +360,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
   skeletons = oct(42);
 
   let t = 0;
-  scene.registerBeforeRender(function () {
+  $scope.scene.registerBeforeRender(function () {
     for (let i in skeletons) {
       if (!skeletons[i].parent) continue;
 

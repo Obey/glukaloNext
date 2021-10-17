@@ -4,7 +4,7 @@
 <head>
     <title>WORMME</title>
 <meta property="og:image" content="browser_WSRnNhytry.png" />
-<meta property="og:title" content="Червеобразная форма" />
+<meta property="og:title" content="Другая, менее червеобразная форма" />
 <meta property="og:description" content="Не, ну а чо" />
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
@@ -278,143 +278,124 @@ if (sc) { $scope.sceneColor = '#000000FF'; $scope.matColor = '#FFFFFFFF'; }
 else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }	
 }
 
-$scope.Length = function() {
-  // tube creation
-  $scope.sideOrientation = BABYLON.Mesh.FRONTSIDE;
-
-  $scope.radius = 9;
-  $scope.length = 38;
-  $scope.coefx = 1.1;
-
-
-  }
-
-  $scope.Length();
+ /*  scene.EnvironmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData(
+    "https://playground.babylonjs.com/textures/environment.dds",
+    scene
+  );
+ */
+  var pbr = new BABYLON.PBRMaterial("pbr", scene);
+  pbr.subSurface.isRefractionEnabled = true;
+  pbr.subSurface.indexOfRefraction = 1.5;
+ 
 
 
-  $scope.wire = 7;   $scope.ww = 1; $scope.www = 4; $scope.wwww = 4;
+  var oct = function (M = 57) {
+    let skeletons = [];
+    let parentAnchor = null;
+    // var M = 57;
+    for (let i = 2; i < M; i++) {
+      let d = i / M / 10;
+      let height = (1 / M) * 7;
+ 
+      let mesh = BABYLON.MeshBuilder.CreateCylinder(
+        "cylinder",
+        { height: height, diameter: (0.1 - d) * 0.5, tessellation: 6 },
+        scene
+      );
+      mesh.position.y = height / 2;
 
-  $scope.Wire = function() {
-    if ($scope.windowHeight > $scope.windowWidth) {
-        $scope.length = 21;
+      //   mesh.parent = BABYLON.Mesh.CreateSphere("sphere", 6, 0.19 - d, scene);
+
+      let cubemesh = BABYLON.MeshBuilder.CreateBox(
+        "box",
+        { size: 0.15 - d },
+        scene
+      );
+
+      let cubemeshL = cubemesh.clone("cubemeshL");
+      cubemeshL.scaling = new BABYLON.Vector3(0.7, 0.7, 0.7);
+      cubemeshL.rotation.x = Math.PI / 4;
+      cubemeshL.position.x -= (0.17 - d) * 1;
+
+      let cubemeshR = cubemesh.clone("cubemeshL");
+      cubemeshR.scaling = new BABYLON.Vector3(0.7, 0.7, 0.7);
+      cubemeshR.rotation.x = Math.PI / 4;
+      cubemeshR.position.x += (0.17 - d) * 1;
+
+      mesh.parent = BABYLON.Mesh.MergeMeshes(
+        [cubemesh, cubemeshL, cubemeshR],
+        true,
+        true,
+        undefined,
+        false,
+        true
+      );
+      mesh.parent.position.y = height / 2 + 0;
+
+      let sidemesh = BABYLON.MeshBuilder.CreateCylinder(
+        "cylinder",
+        { height: 0.23 - d, diameter: (0.1 - d) * 0.5, tessellation: 32 },
+        scene
+      ); /* */
+      sidemesh.rotation.x = Math.PI / 2;
+      sidemesh.rotation.z = Math.PI / 2;
+      sidemesh.parent = mesh.parent;
+
+      //mesh.position.x = height / 4;
+      mesh.parent.enableEdgesRendering();
+      mesh.parent.edgesWidth = 1;
+      mesh.parent.edgesColor = new BABYLON.Color4(0, 0, 0, 0.5);
+      mesh.parent.material = pbr;
+      mesh.parent.parent = parentAnchor;
+      parentAnchor = mesh;
+      skeletons.push(mesh);
     }
-    $scope.path = [];
-      for(var i = -1*$scope.length; i < $scope.length; i++) {
-        var x = i * $scope.coefx;
-        var y = 0;
-        var z = 0;
-        $scope.path.push(new BABYLON.Vector3(x, y, z));
-      }
-  if ($scope.mesh) {$scope.mesh.dispose();}
 
+    skeletons[0].parent.position.y -= 1.5;
 
-
-  $scope.mesh = BABYLON.Mesh.CreateTube("tube", $scope.path, 1, $scope.wire, null, 0, $scope.scene, true, $scope.sideOrientation);
-  if ($scope.windowHeight > $scope.windowWidth) {
-
-    $scope.mesh.rotation.z = Math.PI / 2;
-
-  }
-
-  }
-  $scope.Wire();
-  $scope.meshmat = $scope.Metal_material;
-
-
-
-  $scope.updatePath = function(path = $scope.path, k) {
-
-
-    for (var i = 0; i < path.length; i++) {
-      var x = path[i].x;
-      var y = $scope.ww * Math.cos(i / $scope.www + k * $scope.wwww);
-      var z  = path[i].z*2;
-      path[i].x = x;
-      path[i].y = y;
-      path[i].z = z;
-
-
-    }
+    return skeletons;
   };
 
-  var updateFixedRadius = function(radius=$scope.radius, k) {
-    return (radius + 2 * Math.sin(k)*1);
-  };
+  var skeletons = [];
+  skeletons = oct(42);
 
+  let t = 0;
+  scene.registerBeforeRender(function () {
+    for (let i in skeletons) {
+      if (!skeletons[i].parent) continue;
 
-  // morphing
-
-  $scope.windowWidth = $( window ).width();
-  $scope.windowHeight = $( window ).height();
-
-
-  var k = 0;
-  $scope.kk = 0;
-  $scope.kplus = .009;
-  $scope.scene.registerBeforeRender(function() {
-
-    $scope.kk += 0.0021;
-    $scope.ksk = Math.sin($scope.kk)*4;
-    $scope.coefx =   $scope.ksk/11+0.6;
-
-    if ($scope.ksk > 0) {
-    $scope.kplus += .00001;
-
-    $scope.Wire();
-    $scope.wire = Math.sin($scope.kk)*Math.sin($scope.kk)*6+3;
-    $scope.radius = $scope.ksk/2+4;}
-    else if ($scope.ksk < 0) {
-  $scope.kplus -= .00001;
-   // camera.alpha -= $scope.kplus/7;
-    $scope.wire = -0.1* Math.sin($scope.kk)*8+4;
-    $scope.radius = 4-0.25*$scope.ksk; }
-	//radiusFunction
-    var radiusFunction = function(i, distance) {
-      return radius + 1.2 * Math.sin(i / 2 + k);
-    };
-    $scope.scene.clearColor = new BABYLON.Color4.FromHexString($scope.sceneColor);
-    $scope.updatePath(path = $scope.path, k);
-    var rad = updateFixedRadius(radius = $scope.radius, k);
-    $scope.mesh = BABYLON.Mesh.CreateTube(null, $scope.path, rad, $scope.wire, radiusFunction, null, null, null, null, $scope.mesh);
-    k += $scope.kplus;
-
-
-
-    $scope.meshmat.baseColor = new BABYLON.Color4.FromHexString($scope.matColor);
-    $scope.meshmat.diffuseColor = new BABYLON.Color4.FromHexString($scope.matColor);
-    $scope.meshmat.diffuseTexture = new BABYLON.Texture($scope.texturl, $scope.scene);
-    $scope.meshmat.bumpTexture = new BABYLON.Texture($scope.texturl, $scope.scene);
-    $scope.mesh.material = $scope.meshmat;
-    $scope.mesh.actionManager = new BABYLON.ActionManager($scope.scene);
-
-  /*  $scope.mesh.actionManager.registerAction(
-         new BABYLON.ExecuteCodeAction(
-             BABYLON.ActionManager.OnPickTrigger,
-             function () {doDownload('scene', $scope.scene);}
-         )
-    ); */
-
-
-    $scope.meshmat.bumpTexture.uScale = $scope.meshmat.diffuseTexture.uScale = 12;
-    $scope.meshmat.bumpTexture.vScale = $scope.meshmat.diffuseTexture.vScale = 13;
-
-    $scope.meshmat.wireframe = $scope.Metalframe;
-
-
-
-
-    pl.position = camera.position;
+      let sint = Math.cos(t * i);
+      let poX = Math.sin(t) * 0.04 * i;
+      let poZ = ((Math.sin(t) * sint) / 42) * poX;
+      skeletons[i].parent.rotation.x = poX;
+      skeletons[i].parent.rotation.z = poX;
+ 
+    }
+    t += 0.005;
   });
 
+  // The main render loop.
+  const renderLoop = () => {
+   
 
+    pbr.subSurface.tintColor = new BABYLON.Color3.FromHexString("#FFFFFF:);
+    pbr.metallic =1;
+    pbr.roughness = 0;
 
-/*
-  if (BABYLON.VideoRecorder.IsSupported(engine)) {
-      var recorder = new BABYLON.VideoRecorder(engine);
-      recorder.startRecording("test.webm", 60);
-  }
-*/
+    //  shape.rotation.x -= 0.013;
+    scene.render();
+  };
 
+  var a = 0;
+  scene.beforeRender = () => {
+    a += 0.01;
+    pbr.subSurface.tintColor.g = Math.cos(a) * 0.5 + 0.5;
+    pbr.subSurface.tintColor.b = pbr.subSurface.tintColor.g;
+  };
+	      
+	      
+	      
+	      
 
   return $scope.scene;
 };

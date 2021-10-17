@@ -271,7 +271,7 @@ app.controller('myCtrl', function($scope) {
 
       //mesh.position.x = height / 4;
       mesh.parent.enableEdgesRendering();
-      mesh.parent.edgesWidth = 1;
+      mesh.parent.edgesWidth = 0.5;
       mesh.parent.edgesColor = new BABYLON.Color4(0, 0, 0, 0.5);
       mesh.parent.material = pbr;
       mesh.parent.parent = parentAnchor;

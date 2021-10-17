@@ -283,7 +283,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
     scene
   );
  */
-  var pbr = new BABYLON.PBRMaterial("pbr", scene);
+  var pbr = new BABYLON.PBRMaterial("pbr", $scope.scene);
   pbr.subSurface.isRefractionEnabled = true;
   pbr.subSurface.indexOfRefraction = 1.5;
  
@@ -300,7 +300,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
       let mesh = BABYLON.MeshBuilder.CreateCylinder(
         "cylinder",
         { height: height, diameter: (0.1 - d) * 0.5, tessellation: 6 },
-        scene
+        $scope.scene
       );
       mesh.position.y = height / 2;
 
@@ -309,7 +309,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
       let cubemesh = BABYLON.MeshBuilder.CreateBox(
         "box",
         { size: 0.15 - d },
-        scene
+        $scope.scene
       );
 
       let cubemeshL = cubemesh.clone("cubemeshL");
@@ -335,7 +335,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
       let sidemesh = BABYLON.MeshBuilder.CreateCylinder(
         "cylinder",
         { height: 0.23 - d, diameter: (0.1 - d) * 0.5, tessellation: 32 },
-        scene
+        $scope.scene
       ); /* */
       sidemesh.rotation.x = Math.PI / 2;
       sidemesh.rotation.z = Math.PI / 2;
@@ -383,7 +383,7 @@ else { $scope.sceneColor = '#FFFFFFFF'; $scope.matColor = '#000000FF'; }
     pbr.roughness = 0;
 
     //  shape.rotation.x -= 0.013;
-    scene.render();
+   $scope.scene.render();
   };
 
   var a = 0;
